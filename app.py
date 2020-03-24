@@ -209,6 +209,7 @@ def showProfile(name):
             ax1.text(i, v, str(v), ha='center', color='white')
         fig1.tight_layout()
         fig1.savefig(os.path.join('static/images/graphs', 'blueTeam' + str(parsedMatch['gameId']) + '.png'), transparent=True)
+        plt.close(fig1)
         
         # create plot for red team
         fig2, ax2 = plt.subplots(figsize=(3,3))
@@ -231,6 +232,7 @@ def showProfile(name):
             ax2.text(i, v, str(v), ha='center', color='white')
         fig2.tight_layout()
         fig2.savefig(os.path.join('static/images/graphs', 'redTeam' + str(parsedMatch['gameId']) + '.png'), transparent=True)
+        plt.close(fig2)
         
         match = {'id': parsedMatch['gameId'], 'gameType': gameType, 'championIcon': CHAMPION_SQUARE_ICON + championIdMap[parsedMatch['champion']] + '.png', 'kills': kills, 'deaths': deaths, 'assists': assists, 'item0': ITEM_URL + item0, 'item1': ITEM_URL + item1, 'item2': ITEM_URL + item2, 'item3': ITEM_URL + item3, 'item4': ITEM_URL + item4, 'item5': ITEM_URL + item5, 'item6': ITEM_URL + item6, 'damage': damage, 'win': win, 'side': side, 'wardsPlaced': wardsPlaced, 'totalCS': totalCS, 'gameLength': gameLength, 'avgCsPerMin': avgCsPerMin, 'blueTeamKills': blueTeamKills, 'blueTeamWards': blueTeamTotalWardsPlaced, 'redTeamWards': redTeamTotalWardsPlaced, 'blueTeamFirstDragon': blueTeamFirstDragon, 'blueTeamDragonKills': blueTeamDragonKills, 'blueTeamFirstRiftHerald': blueTeamFirstRiftHerald, 'blueTeamRiftHeraldKills': blueTeamRiftHeraldKills, 'blueTeamFirstBaron': blueTeamFirstBaron, 'blueTeamBaronKills': blueTeamBaronKills, 'blueTeamFirstBlood': blueTeamFirstBlood, 'blueTeamFirstTower': blueTeamFirstTower, 'blueTeamTowerKills': blueTeamTowerKills, 'redTeamKills': redTeamKills, 'redTeamFirstDragon': redTeamFirstDragon, 'redTeamDragonKills': redTeamDragonKills, 'redTeamFirstRiftHerald': redTeamFirstRiftHerald, 'redTeamRiftHeraldKills': redTeamRiftHeraldKills, 'redTeamFirstBaron': redTeamFirstBaron, 'redTeamBaronKills': redTeamBaronKills, 'redTeamFirstBlood': redTeamFirstBlood, 'redTeamFirstTower': redTeamFirstTower, 'redTeamTowerKills': redTeamTowerKills, 'participants': participants}
         matchList.append(match)
