@@ -2,6 +2,8 @@
 
 A web application that displays League of Legends player information. Uses the [Riot Games API](https://developer.riotgames.com/)
 
+https://summoner-stats.herokuapp.com
+
 - General Information
   - level
   - rank
@@ -21,4 +23,5 @@ A web application that displays League of Legends player information. Uses the [
 
 ## Resources
 https://stackoverflow.com/questions/14908576/how-to-remove-frame-from-matplotlib-pyplot-figure-vs-matplotlib-figure-frame  
-https://stackoverflow.com/questions/2176424/hiding-axis-text-in-matplotlib-plots
+https://stackoverflow.com/questions/2176424/hiding-axis-text-in-matplotlib-plots  
+https://stackoverflow.com/questions/44246650/automating-bar-charts-plotting-to-show-country-flags-as-ticklabels

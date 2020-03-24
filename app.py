@@ -3,6 +3,7 @@ from markupsafe import escape
 import requests, json, os
 from exports import championIdMap, queueTypes, itemMap
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -191,10 +192,13 @@ def showProfile(name):
         fig1, ax1 = plt.subplots(figsize=(3,3))
         ax1.bar(range(5), values[:5], align='center')
         ax1.set_title('Damage Dealt to Champions', color='white')
-        plt.xticks(rotation=90)
         ax1.set_xticks(range(5))
-        ax1.set_xticklabels(labels[:5], color='white')
+        # set pictures as labels
+        ax1.set_xticklabels([' ', ' ', ' ', ' ', ' '])
+        ax1.tick_params(axis='x', which='major', pad=26)
         ax1.set_yticks([])
+        for i, c in enumerate(labels[:5]):
+            offset_image(i, c, ax1)
         # hide border
         ax1.spines['top'].set_visible(False)
         ax1.spines['right'].set_visible(False)
@@ -210,10 +214,13 @@ def showProfile(name):
         fig2, ax2 = plt.subplots(figsize=(3,3))
         ax2.bar(range(5), values[5:], align='center', color='red')
         ax2.set_title('Damage Dealt to Champions', color='white')
-        plt.xticks(rotation=90)
         ax2.set_xticks(range(5))
-        ax2.set_xticklabels(labels[5:], color='white')
+        # set pictures as labels
+        ax2.set_xticklabels([' ', ' ', ' ', ' ', ' '])
+        ax2.tick_params(axis='x', which='major', pad=26)
         ax2.set_yticks([])
+        for i, c in enumerate(labels[5:]):
+            offset_image(i, c, ax2)
         # hide border
         ax2.spines['top'].set_visible(False)
         ax2.spines['right'].set_visible(False)
@@ -229,4 +236,13 @@ def showProfile(name):
         matchList.append(match)
     
     return render_template('profile.html', summonerName=summonerData['name'], imgLink=imgLink, summonerLevel=summonerLevel, rankedData=rankedData, masteryData=masteryData, matchList=matchList)
+    
+# make image as label
+def offset_image(coord, name, ax):
+    img = plt.imread(CHAMPION_SQUARE_ICON + name + '.png')
+    im = OffsetImage(img, zoom=0.2)
+    im.image.axes = ax
+    
+    ab = AnnotationBbox(im, (coord, 0),  xybox=(0., -16.), frameon=False, xycoords='data',  boxcoords="offset points", pad=0)
+    ax.add_artist(ab)
     
