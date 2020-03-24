@@ -1,11 +1,8 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markupsafe import escape
-# import requests, json, os, io, base64
 import requests, json, os
 from exports import championIdMap, queueTypes, itemMap
 import matplotlib.pyplot as plt
-# from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-# from matplotlib.figure import Figure
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -67,8 +64,6 @@ def showProfile(name):
     parsedMatchList = parsedMatchList['matches'][:10]
     
     # get individual game info
-    # blueTeamImages = []
-    # redTeamImages = []
     matchList = []
     for parsedMatch in parsedMatchList:
         res = requests.get(MATCH_URL + str(parsedMatch['gameId']) + API)
@@ -209,11 +204,6 @@ def showProfile(name):
         for i, v in enumerate(values[:5]):
             ax1.text(i, v, str(v), ha='center', color='white')
         fig1.tight_layout()
-        # blueTeamImage = io.BytesIO()
-        # FigureCanvas(fig1).print_png(blueTeamImage)
-        # pngImageB64String = 'data:image/png;base64,'
-        # pngImageB64String += base64.b64encode(blueTeamImage.getvalue()).decode('utf8')
-        # blueTeamImages.append(blueTeamImage)
         fig1.savefig(os.path.join('static/images/graphs', 'blueTeam' + str(parsedMatch['gameId']) + '.png'), transparent=True)
         
         # create plot for red team
@@ -233,11 +223,6 @@ def showProfile(name):
         for i, v in enumerate(values[5:]):
             ax2.text(i, v, str(v), ha='center', color='white')
         fig2.tight_layout()
-        # redTeamImage = io.BytesIO()
-        # FigureCanvas(fig2).print_png(redTeamImage)
-        # pngImageB64String = 'data:image/png;base64,'
-        # pngImageB64String += base64.b64encode(redTeamImage.getvalue()).decode('utf8')
-        # redTeamImages.append(redTeamImage)
         fig2.savefig(os.path.join('static/images/graphs', 'redTeam' + str(parsedMatch['gameId']) + '.png'), transparent=True)
         
         match = {'id': parsedMatch['gameId'], 'gameType': gameType, 'championIcon': CHAMPION_SQUARE_ICON + championIdMap[parsedMatch['champion']] + '.png', 'kills': kills, 'deaths': deaths, 'assists': assists, 'item0': ITEM_URL + item0, 'item1': ITEM_URL + item1, 'item2': ITEM_URL + item2, 'item3': ITEM_URL + item3, 'item4': ITEM_URL + item4, 'item5': ITEM_URL + item5, 'item6': ITEM_URL + item6, 'damage': damage, 'win': win, 'side': side, 'wardsPlaced': wardsPlaced, 'totalCS': totalCS, 'gameLength': gameLength, 'avgCsPerMin': avgCsPerMin, 'blueTeamKills': blueTeamKills, 'blueTeamWards': blueTeamTotalWardsPlaced, 'redTeamWards': redTeamTotalWardsPlaced, 'blueTeamFirstDragon': blueTeamFirstDragon, 'blueTeamDragonKills': blueTeamDragonKills, 'blueTeamFirstRiftHerald': blueTeamFirstRiftHerald, 'blueTeamRiftHeraldKills': blueTeamRiftHeraldKills, 'blueTeamFirstBaron': blueTeamFirstBaron, 'blueTeamBaronKills': blueTeamBaronKills, 'blueTeamFirstBlood': blueTeamFirstBlood, 'blueTeamFirstTower': blueTeamFirstTower, 'blueTeamTowerKills': blueTeamTowerKills, 'redTeamKills': redTeamKills, 'redTeamFirstDragon': redTeamFirstDragon, 'redTeamDragonKills': redTeamDragonKills, 'redTeamFirstRiftHerald': redTeamFirstRiftHerald, 'redTeamRiftHeraldKills': redTeamRiftHeraldKills, 'redTeamFirstBaron': redTeamFirstBaron, 'redTeamBaronKills': redTeamBaronKills, 'redTeamFirstBlood': redTeamFirstBlood, 'redTeamFirstTower': redTeamFirstTower, 'redTeamTowerKills': redTeamTowerKills, 'participants': participants}
