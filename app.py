@@ -1,23 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
-from markupsafe import escape
-import requests, json, os
-from exports import championIdMap, queueTypes, itemMap
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from dotenv import load_dotenv
 load_dotenv()
-
-API = f"?api_key={os.getenv('API_KEY')}"
-
-SUMMONER_URL = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'
-PROFILE_ICON = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/profileicon/'
-RANKED_URL = 'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/'
-MASTERY_URL = 'https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/'
-MATCHLIST_URL = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/'
-CHAMPION_SQUARE_ICON = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/'
-CHAMPION_LOADING_ICON = 'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/'
-MATCH_URL = 'https://na1.api.riotgames.com/lol/match/v4/matches/'
-ITEM_URL = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/item/'
 
 app = Flask(__name__)
 
@@ -31,6 +15,22 @@ def profile():
     
 @app.route('/profile/<name>')
 def showProfile(name):
+
+    # variables declared locally for performance improvement
+    import requests, json, os
+    from markupsafe import escape
+    from exports import championIdMap, queueTypes, itemMap
+    API = f"?api_key={os.getenv('API_KEY')}"
+    SUMMONER_URL = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'
+    PROFILE_ICON = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/profileicon/'
+    RANKED_URL = 'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/'
+    MASTERY_URL = 'https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/'
+    MATCHLIST_URL = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/'
+    CHAMPION_SQUARE_ICON = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/'
+    CHAMPION_LOADING_ICON = 'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/'
+    MATCH_URL = 'https://na1.api.riotgames.com/lol/match/v4/matches/'
+    ITEM_URL = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/item/'
+    
     # get summoner info
     res = requests.get(f"{SUMMONER_URL}{escape(name)}{API}")
     summonerData = json.loads(res.text)
@@ -241,6 +241,8 @@ def showProfile(name):
     
 # make image as label
 def offset_image(coord, name, ax):
+    from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+    CHAMPION_SQUARE_ICON = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/'
     img = plt.imread(f"{CHAMPION_SQUARE_ICON}{name}.png")
     im = OffsetImage(img, zoom=0.2)
     im.image.axes = ax
