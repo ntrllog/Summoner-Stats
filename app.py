@@ -7,7 +7,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from dotenv import load_dotenv
 load_dotenv()
 
-API = '?api_key=' + os.getenv('API_KEY')
+API = f"?api_key={os.getenv('API_KEY')}"
 
 SUMMONER_URL = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'
 PROFILE_ICON = 'http://ddragon.leagueoflegends.com/cdn/10.6.1/img/profileicon/'
@@ -32,42 +32,42 @@ def profile():
 @app.route('/profile/<name>')
 def showProfile(name):
     # get summoner info
-    res = requests.get(SUMMONER_URL + escape(name) + API)
+    res = requests.get(f"{SUMMONER_URL}{escape(name)}{API}")
     summonerData = json.loads(res.text)
     
-    imgLink = PROFILE_ICON + str(summonerData['profileIconId']) + '.png'
+    imgLink = f"{PROFILE_ICON}{str(summonerData['profileIconId'])}.png"
     summonerLevel = summonerData['summonerLevel']
     
     # get ranked info
-    res = requests.get(RANKED_URL + str(summonerData['id']) + API)
+    res = requests.get(f"{RANKED_URL}{str(summonerData['id'])}{API}")
     parsedRankedData = json.loads(res.text)
     
     rankedData = {'rank': '', 'numWins': 0, 'numLosses': 0, 'queueType': ''}
     if parsedRankedData:
-        rankedData['rank'] = parsedRankedData[0]['tier'] + ' ' + parsedRankedData[0]['rank']
+        rankedData['rank'] = f"{parsedRankedData[0]['tier']} {parsedRankedData[0]['rank']}"
         rankedData['numWins'] = parsedRankedData[0]['wins']
         rankedData['numLosses'] = parsedRankedData[0]['losses']
         rankedData['queueType'] = parsedRankedData[0]['queueType']
-        
+
     # get champion mastery info
-    res = requests.get(MASTERY_URL + str(summonerData['id']) + API)
+    res = requests.get(f"{MASTERY_URL}{str(summonerData['id'])}{API}")
     parsedMasteryData = json.loads(res.text)
     
     parsedMasteryData = parsedMasteryData[:3]
     masteryData = []
     for champion in parsedMasteryData:
-        mastery = {'championIcon': CHAMPION_LOADING_ICON + championIdMap[champion['championId']] + '_0.jpg', 'championName': championIdMap[champion['championId']], 'level': champion['championLevel'], 'points': champion['championPoints']}
+        mastery = {'championIcon': f"{CHAMPION_LOADING_ICON}{championIdMap[champion['championId']]}_0.jpg", 'championName': championIdMap[champion['championId']], 'level': champion['championLevel'], 'points': champion['championPoints']}
         masteryData.append(mastery)
-    
+
     # get match history
-    res = requests.get(MATCHLIST_URL + str(summonerData['accountId']) + API)
+    res = requests.get(f"{MATCHLIST_URL}{str(summonerData['accountId'])}{API}")
     parsedMatchList = json.loads(res.text)
     parsedMatchList = parsedMatchList['matches'][:10]
-    
+
     # get individual game info
     matchList = []
     for parsedMatch in parsedMatchList:
-        res = requests.get(MATCH_URL + str(parsedMatch['gameId']) + API)
+        res = requests.get(f"{MATCH_URL}{str(parsedMatch['gameId'])}{API}")
         matchData = json.loads(res.text)
         
         # get type of game (e.g. ranked, normal, custom)
@@ -82,7 +82,7 @@ def showProfile(name):
         
         # get participant id and all participant names and ids
         participants = {} # key: participant ID, value: dict = {keys: name, kills, deaths, assists}
-        participantId = 0
+        participantId = -1
         for participant in matchData['participantIdentities']:
             participants[participant['participantId']] = {'summonerName': participant['player']['summonerName']}
             if participant['player']['summonerId'] == summonerData['id']:
@@ -208,7 +208,7 @@ def showProfile(name):
         for i, v in enumerate(values[:5]):
             ax1.text(i, v, str(v), ha='center', color='white')
         fig1.tight_layout()
-        fig1.savefig(os.path.join('static/images/graphs', 'blueTeam' + str(parsedMatch['gameId']) + '.png'), transparent=True)
+        fig1.savefig(os.path.join('static/images/graphs', f"blueTeam{str(parsedMatch['gameId'])}.png"), transparent=True)
         plt.close(fig1)
         
         # create plot for red team
@@ -231,7 +231,7 @@ def showProfile(name):
         for i, v in enumerate(values[5:]):
             ax2.text(i, v, str(v), ha='center', color='white')
         fig2.tight_layout()
-        fig2.savefig(os.path.join('static/images/graphs', 'redTeam' + str(parsedMatch['gameId']) + '.png'), transparent=True)
+        fig2.savefig(os.path.join('static/images/graphs', f"redTeam{str(parsedMatch['gameId'])}.png"), transparent=True)
         plt.close(fig2)
         
         match = {'id': parsedMatch['gameId'], 'gameType': gameType, 'championIcon': CHAMPION_SQUARE_ICON + championIdMap[parsedMatch['champion']] + '.png', 'kills': kills, 'deaths': deaths, 'assists': assists, 'item0': ITEM_URL + item0, 'item1': ITEM_URL + item1, 'item2': ITEM_URL + item2, 'item3': ITEM_URL + item3, 'item4': ITEM_URL + item4, 'item5': ITEM_URL + item5, 'item6': ITEM_URL + item6, 'damage': damage, 'win': win, 'side': side, 'wardsPlaced': wardsPlaced, 'totalCS': totalCS, 'gameLength': gameLength, 'avgCsPerMin': avgCsPerMin, 'blueTeamKills': blueTeamKills, 'blueTeamWards': blueTeamTotalWardsPlaced, 'redTeamWards': redTeamTotalWardsPlaced, 'blueTeamFirstDragon': blueTeamFirstDragon, 'blueTeamDragonKills': blueTeamDragonKills, 'blueTeamFirstRiftHerald': blueTeamFirstRiftHerald, 'blueTeamRiftHeraldKills': blueTeamRiftHeraldKills, 'blueTeamFirstBaron': blueTeamFirstBaron, 'blueTeamBaronKills': blueTeamBaronKills, 'blueTeamFirstBlood': blueTeamFirstBlood, 'blueTeamFirstTower': blueTeamFirstTower, 'blueTeamTowerKills': blueTeamTowerKills, 'redTeamKills': redTeamKills, 'redTeamFirstDragon': redTeamFirstDragon, 'redTeamDragonKills': redTeamDragonKills, 'redTeamFirstRiftHerald': redTeamFirstRiftHerald, 'redTeamRiftHeraldKills': redTeamRiftHeraldKills, 'redTeamFirstBaron': redTeamFirstBaron, 'redTeamBaronKills': redTeamBaronKills, 'redTeamFirstBlood': redTeamFirstBlood, 'redTeamFirstTower': redTeamFirstTower, 'redTeamTowerKills': redTeamTowerKills, 'participants': participants}
@@ -241,7 +241,7 @@ def showProfile(name):
     
 # make image as label
 def offset_image(coord, name, ax):
-    img = plt.imread(CHAMPION_SQUARE_ICON + name + '.png')
+    img = plt.imread(f"{CHAMPION_SQUARE_ICON}{name}.png")
     im = OffsetImage(img, zoom=0.2)
     im.image.axes = ax
     
