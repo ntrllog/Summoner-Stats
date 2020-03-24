@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--
+                                      _
+        /\     _             _   _   | |             __    __
+       /  \   | |      /\   | \ | |  | |       /\   |  \  /  |
+      /    \  | |     /  \  |  \| |  | |      /  \  | |\\//| |
+     / ____ \ | |__  / __ \ | |\  |  | |___  / __ \ | | \/ | |
+    /_/    \_\|____|/_/  \_\|_| \_|  |_____|/_/  \_\|_|    |_|
+                          _   _
+     _  _    _     _  _  | | | |   __     ____
+    | |/ \  | |_  | |/_| | | | |  /  \   /    \
+    | |   | |  _| |  /   | | | | | || | |  ||  |
+    | |   | | |_  | |    | | | | | || | |  ||  |
+    |_|   | |___| |_|    |_| |_|  \__/   \____/|
+                                               |
+                                          ____/
+    -->
+    <title>Alan Lam | Summoner Stats</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative|Cormorant+Garamond&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Summoner Stats</h1>
+      <div class="profile row">
+        <div class="col-sm flex-center">
+          <img src="{{ imgLink }}" class="img-fluid"/>
+        </div>
+        <div class="col-sm flex-center">
+          <div>
+            <h1>{{ summonerName }}</h1>
+            <p>Level {{ summonerLevel }}</p>
+            <p>{{ rankedData['rank'] }} {{ rankedData['queueType'] }}</p>
+            <p>Wins: {{ rankedData['numWins'] }} Losses: {{ rankedData['numLosses'] }}</p>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="mastery">
+        <p>Most Played Champions:</p>
+        <div class="row">
+          {% for champion in masteryData %}
+            <div class="col-sm">
+              <p><img src="{{ champion['championIcon'] }}" class="img-fluid" /></p>
+              <p>{{ champion['championName'] }}</p>
+              <p>Level {{ champion['level'] }}</p>
+              <p>{{ champion['points'] }} Points</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <br>
+      <div class="match-history">
+        <p>Most Recent Games:</p>
+          {% for match in matchList %}
+            <div class="individual-match row">
+              <div class="col-sm-6 flex-center">
+                <img src="{{ match['championIcon'] }}" class="img-fluid" />
+              </div>
+              <div class="col-sm-6">
+                <div>
+                  <p style="color: {{ 'aqua' if match['win'] else 'red' }};">{{ 'Victory' if match['win'] else 'Defeat' }}</p>
+                  <p>{{ match['gameType'] }}</p>
+                  <p>{{ match['kills'] }}/{{ match['deaths'] }}/{{ match['assists'] }}</p>
+                  {% if match['item0'][-3:] == 'png' %}<img src="{{ match['item0'] }}" class="img-fluid" />{% endif %}
+                  {% if match['item1'][-3:] == 'png' %}<img src="{{ match['item1'] }}" class="img-fluid" />{% endif %}
+                  {% if match['item2'][-3:] == 'png' %}<img src="{{ match['item2'] }}" class="img-fluid" />{% endif %}
+                  {% if match['item3'][-3:] == 'png' %}<img src="{{ match['item3'] }}" class="img-fluid" />{% endif %}
+                  {% if match['item4'][-3:] == 'png' %}<img src="{{ match['item4'] }}" class="img-fluid" />{% endif %}
+                  {% if match['item5'][-3:] == 'png' %}<img src="{{ match['item5'] }}" class="img-fluid" />{% endif %}
+                  {% if match['item6'][-3:] == 'png' %}<img src="{{ match['item6'] }}" class="img-fluid" />{% endif %}
+                </div>
+              </div>
+              <div class="collapse full-width" id="id{{ match['id'] }}">
+                <div class="row">
+                  <div class="center-text col-sm-6">
+                    <p>Side: {{ match['side'] }}</p>
+                    <p>Game Length: {{ match['gameLength'] }}</p>
+                  </div>
+                  <div class="center-text col-sm-6">
+                    <p>Damage Dealt: {{ match['damage'] }}</p>
+                    <p>Wards Placed: {{ match['wardsPlaced'] }}</p>
+                    <p>Total CS: {{ match['totalCS'] }}</p>
+                    <p>Average CS/Min: {{ match['avgCsPerMin'] }}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="center-text col-sm-6">
+                    <p>Blue Team Kills: {{ match['blueTeamKills'] }}</p>
+                    {% for i in range(1, 6) %}
+                      <p>{{ match['participants'][i]['summonerName'] }} <img src="http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/{{ match['participants'][i]['champion'] }}.png" class="small-size img-fluid" />: {{ match['participants'][i]['kills'] }}/{{ match['participants'][i]['deaths'] }}/{{ match['participants'][i]['assists'] }} | CS: {{ match['participants'][i]['cs'] }}</p>
+                    {% endfor %}
+                    <img src="/static/images/graphs/blueTeam{{ match['id'] }}.png" class="img-fluid" />
+                    <p>Blue Team Wards: {{ match['blueTeamWards'] }}</p>
+                    {% if match['blueTeamFirstBlood'] %}<p>First Blood</p>{% endif %}
+                    {% if match['blueTeamFirstTower'] %}<p>First Tower</p>{% endif %}
+                    {% if match['blueTeamFirstDragon'] %}<p>First Dragon</p>{% endif %}
+                    {% if match['blueTeamFirstRiftHerald'] %}<p>First Rift Herald</p>{% endif %}
+                    {% if match['blueTeamFirstBaron'] %}<p>First Baron</p>{% endif %}
+                  </div>
+                  <div class="center-text col-sm-6">
+                    <p>Red Team Kills: {{ match['redTeamKills'] }}</p>
+                    {% for i in range(6, 11) %}
+                      <p>{{ match['participants'][i]['summonerName'] }} <img src="http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/{{ match['participants'][i]['champion'] }}.png" class="small-size img-fluid" />: {{ match['participants'][i]['kills'] }}/{{ match['participants'][i]['deaths'] }}/{{ match['participants'][i]['assists'] }} | CS: {{ match['participants'][i]['cs'] }}</p>
+                    {% endfor %}
+                    <img src="/static/images/graphs/redTeam{{ match['id'] }}.png" class="img-fluid" />
+                    <p>Red Team Wards: {{ match['redTeamWards'] }}</p>
+                    {% if match['redTeamFirstBlood'] %}<p>First Blood</p>{% endif %}
+                    {% if match['redTeamFirstTower'] %}<p>First Tower</p>{% endif %}
+                    {% if match['redTeamFirstDragon'] %}<p>First Dragon</p>{% endif %}
+                    {% if match['redTeamFirstRiftHerald'] %}<p>First Rift Herald</p>{% endif %}
+                    {% if match['redTeamFirstBaron'] %}<p>First Baron</p>{% endif %}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="center-text col-sm-6">
+                    <p>Tower Kills: {{ match['blueTeamTowerKills'] }}</p>
+                    <p>Dragon Kills: {{ match['blueTeamDragonKills'] }}</p>
+                    <p>Rift Herald Kills: {{ match['blueTeamRiftHeraldKills'] }}</p>
+                    <p>Baron Kills: {{ match['blueTeamBaronKills'] }}</p>
+                  </div>
+                  <div class="center-text col-sm-6">
+                    <p>Tower Kills: {{ match['redTeamTowerKills'] }}</p>
+                    <p>Dragon Kills: {{ match['redTeamDragonKills'] }}</p>
+                    <p>Rift Herald Kills: {{ match['redTeamRiftHeraldKills'] }}</p>
+                    <p>Baron Kills: {{ match['redTeamBaronKills'] }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-center full-width">
+                <a class="btn btn-primary" data-toggle="collapse" href="#id{{ match.id }}" role="button">More Stats</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
