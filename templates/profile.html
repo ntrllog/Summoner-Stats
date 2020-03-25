@@ -91,8 +91,9 @@
                 <div class="row">
                   <div class="center-text col-sm-6">
                     <p>Blue Team Kills: {{ match['blueTeamKills'] }}</p>
-                    {% for i in range(1, 6) %}
-                      <p>{{ match['participants'][i]['summonerName'] }} <img src="http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/{{ match['participants'][i]['champion'] }}.png" class="small-size img-fluid" />: {{ match['participants'][i]['kills'] }}/{{ match['participants'][i]['deaths'] }}/{{ match['participants'][i]['assists'] }} | CS: {{ match['participants'][i]['cs'] }}</p>
+                    {% for i in range(5) %}
+                      {% set playerStats = match['players'][i] %}
+                      <p>{{ playerStats['summonerName'] }} <img src="http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/{{ playerStats['champion'] }}.png" class="small-size img-fluid" />: {{ playerStats['kills'] }}/{{ playerStats['deaths'] }}/{{ playerStats['assists'] }} | CS: {{ playerStats['cs'] }}</p>
                     {% endfor %}
                     <img src="/static/images/graphs/blueTeam{{ match['id'] }}.png" class="img-fluid" />
                     <p>Blue Team Wards: {{ match['blueTeamWards'] }}</p>
@@ -104,8 +105,9 @@
                   </div>
                   <div class="center-text col-sm-6">
                     <p>Red Team Kills: {{ match['redTeamKills'] }}</p>
-                    {% for i in range(6, 11) %}
-                      <p>{{ match['participants'][i]['summonerName'] }} <img src="http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/{{ match['participants'][i]['champion'] }}.png" class="small-size img-fluid" />: {{ match['participants'][i]['kills'] }}/{{ match['participants'][i]['deaths'] }}/{{ match['participants'][i]['assists'] }} | CS: {{ match['participants'][i]['cs'] }}</p>
+                    {% for i in range(5, 10) %}
+                      {% set playerStats = match['players'][i] %}
+                      <p>{{ playerStats['summonerName'] }} <img src="http://ddragon.leagueoflegends.com/cdn/10.6.1/img/champion/{{ playerStats['champion'] }}.png" class="small-size img-fluid" />: {{ playerStats['kills'] }}/{{ playerStats['deaths'] }}/{{ playerStats['assists'] }} | CS: {{ playerStats['cs'] }}</p>
                     {% endfor %}
                     <img src="/static/images/graphs/redTeam{{ match['id'] }}.png" class="img-fluid" />
                     <p>Red Team Wards: {{ match['redTeamWards'] }}</p>
