@@ -67,7 +67,7 @@ def showProfile(name):
     parsedMatchList = json.loads(res.text)
 
     # get individual game info
-    matchList = list(map(getMatchData, parsedMatchList['matches'][:10]))
+    matchList = list(map(getMatchData, parsedMatchList['matches'][:5]))
 
     return render_template('profile.html', summonerName=summonerData['name'], imgLink=imgLink, summonerLevel=summonerLevel, rankedData=rankedData, masteryData=masteryData, matchList=matchList)
 
