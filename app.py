@@ -167,8 +167,6 @@ def getMatchDataGlobal(parsedMatch):
             redTeamTotalWardsPlaced += playerStats['wardsPlaced']
             
         # get player stats
-        print(summonerId[0])
-        print(playerIdentity['summonerId'])
         if summonerId[0] == playerIdentity['summonerId']:
             kills = playerStats['kills']
             deaths = playerStats['deaths']
