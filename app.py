@@ -11,7 +11,7 @@ load_dotenv()
 
 summonerId = [] # global because used in two different functions that are being used in maps
 
-summonerName = 'a'
+summonerName = ''
 
 app = Flask(__name__)
 
