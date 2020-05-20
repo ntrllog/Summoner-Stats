@@ -11,15 +11,27 @@ load_dotenv()
 
 summonerId = [] # global because used in two different functions that are being used in maps
 
+summonerName = 'a'
+
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
+@app.errorhandler(500)
+def internalError(error):
+    return render_template('error.html', summonerName=summonerName)
+
+@app.route('/home')
+def redirectHome():
+    return redirect(url_for('home'))
+
 @app.route('/profile', methods=['POST'])
 def profile():
-    return redirect(url_for('showProfile', name=request.form['summonerName']))
+    global summonerName # global so it can be used in internalError handling
+    summonerName = request.form['summonerName']
+    return redirect(url_for('showProfile', name=summonerName))
 
 @app.route('/profile/<name>')
 def showProfile(name):
