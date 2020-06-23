@@ -25,3 +25,4 @@ https://summoner-stats.herokuapp.com
 https://stackoverflow.com/questions/14908576/how-to-remove-frame-from-matplotlib-pyplot-figure-vs-matplotlib-figure-frame  
 https://stackoverflow.com/questions/2176424/hiding-axis-text-in-matplotlib-plots  
 https://stackoverflow.com/questions/44246650/automating-bar-charts-plotting-to-show-country-flags-as-ticklabels
+https://stackoverflow.com/questions/17957511/jinja2-round-filter-not-rounding

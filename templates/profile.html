@@ -35,7 +35,8 @@
             <h1>{{ summonerName }}</h1>
             <p>Level {{ summonerLevel }}</p>
             <p>{{ rankedData['rank'] }} {{ rankedData['queueType'] }}</p>
-            <p>Wins: {{ rankedData['numWins'] }} Losses: {{ rankedData['numLosses'] }} (ranked)</p>
+            <p>Wins: {{ rankedData['numWins'] }} Losses: {{ rankedData['numLosses'] }} (ranked games)</p>
+            <p>Winrate: {{ (rankedData['numWins'] / (rankedData['numWins'] + rankedData['numLosses']) * 100)|round|int }}%</p>
           </div>
         </div>
       </div>
@@ -45,7 +46,7 @@
         <div class="row">
           {% for champion in masteryData %}
             <div class="col-sm">
-              <p><img src="{{ champion['championIcon'] }}" class="img-fluid" /></p>
+              <p><img src="{{ champion['championIcon'] }}" class="img-fluid" alt="Profile icon (currently unavailable)"  /></p>
               <p>{{ champion['championName'] }}</p>
               <p>Level {{ champion['level'] }}</p>
               <p>{{ champion['points'] }} Points</p>
